@@ -37,7 +37,10 @@ public class VentanaPrincipal {
         panelCentral.add(etiqueta);
         panelCentral.add(Box.createVerticalStrut(5)); // pequeña separación
         panelCentral.add(etiqueta1);
-
+        JButton boton = new JButton("Presióname");
+        JPanel panelBoton = new JPanel();
+        panelBoton.add(boton);
+        ventana.getContentPane().add(panelBoton, BorderLayout.SOUTH);
         // Panel exterior que centrará todo vertical y horizontalmente
         JPanel panelExterior = new JPanel(new GridBagLayout());
         panelExterior.setBackground(Color.black);
