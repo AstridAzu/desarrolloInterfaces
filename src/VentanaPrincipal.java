@@ -1,5 +1,7 @@
 import javax.swing.*; // Libreria Swing para componentes GUI
 import java.awt.*; // Libreria AWT para elementos visuales básicos
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class VentanaPrincipal {
     public static void main(String[] args) {
@@ -13,6 +15,7 @@ public class VentanaPrincipal {
     private static void crearYMostrarGUI() {
         JFrame ventana = new JFrame("Mi Primera Ventana GUI");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //dimenciones de la ventana
         ventana.setSize(400, 400);
         ventana.getContentPane().setBackground(Color.RED);
 
@@ -37,7 +40,18 @@ public class VentanaPrincipal {
         panelCentral.add(etiqueta);
         panelCentral.add(Box.createVerticalStrut(5)); // pequeña separación
         panelCentral.add(etiqueta1);
-        JButton boton = new JButton("Presióname");
+        //creamos el boton
+        JButton boton = new JButton("clip");
+        //agregar funcionalidad
+        boton.addActionListener((new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                 //mostrar la ventana  con el metodo showMessageDialog
+                JOptionPane.showMessageDialog(ventana,"en hora buena");
+            }
+
+        }));
+
         JPanel panelBoton = new JPanel();
         panelBoton.add(boton);
         ventana.getContentPane().add(panelBoton, BorderLayout.SOUTH);
