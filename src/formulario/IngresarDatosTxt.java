@@ -2,20 +2,22 @@ package formulario;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
-public class IngresarDatos extends Component {
+public class IngresarDatosTxt extends Component {
+    private JPanel contenedor;
     private JTextField nombreTextField;
     private JTextField apellidoTextField;
-    private JButton limpiarButton;
-    private JButton enviarButton;
     private JTextField emailTextField;
     private JTextField telefonoTextField;
     private JTextArea mensajeTextArea;
-    private JPanel contenedor;
-
-    public IngresarDatos() {
+    private JButton limpiarButton;
+    private JButton grabarButton;
+    public IngresarDatosTxt() {
         //codigo para el boton enviar
-        enviarButton.addActionListener(e -> {
+        grabarButton.addActionListener(e -> {
             String nombre = nombreTextField.getText();
             String apellido = apellidoTextField.getText();
             String email = emailTextField.getText();
@@ -47,28 +49,58 @@ public class IngresarDatos extends Component {
             if(!nombre.isEmpty() || !apellido.isEmpty() || !email.isEmpty() || !telefono.isEmpty()) {
                 mensajeTextArea.setText("Datos introducidos correctamente");
             }
+            //ruta proyecto
+            String ruta = System.getProperty("user.dir");
+            String archivoTXT=ruta+"\\src\\formulario\\"+"txt.txt";
+            File archivoTXTFile = new File(archivoTXT);
+            if(!archivoTXTFile.exists()) {
+                try {
+                    archivoTXTFile.createNewFile();
+                } catch (IOException ex) {}
+            }
 
+            try (FileWriter writer = new FileWriter(archivoTXT, true)) {
+                writer.write("Nombre: " + nombre + "\n");
+                writer.write("Apellidos: " + apellido+ "\n");
+                writer.write("Email: " + email + "\n");
+                writer.write("Telefono: " + telefono + "\n");
+
+                writer.write("--------------------------\n");
+                JOptionPane.showMessageDialog(this,
+                        "Datos guardados correctamente en " + archivoTXT,
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+                limpiarCampos();
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Error al guardar los datos:\n" + ex.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
 
 
         });
         //acciones del boton limpiar
         limpiarButton.addActionListener(e -> {
             //pone inputs en blanco
-            nombreTextField.setText("");
-            apellidoTextField.setText("");
-            emailTextField.setText("");
-            telefonoTextField.setText("");
-            mensajeTextArea.setText("");
+            limpiarCampos();
         });
     }
-
+    public void limpiarCampos(){
+        //pone inputs en blanco
+        nombreTextField.setText("");
+        apellidoTextField.setText("");
+        emailTextField.setText("");
+        telefonoTextField.setText("");
+        mensajeTextArea.setText("");
+    }
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 //creo un frame
                 JFrame frame = new JFrame("Ingresar Datos");
-                IngresarDatos formulario = new IngresarDatos();
+                IngresarDatosTxt formulario = new IngresarDatosTxt();
                 //al frame le doy el formulario que hice
                 frame.setContentPane(formulario.contenedor);
                 //ajusto el tamaño de la ventana al contenido preferido
@@ -79,6 +111,4 @@ public class IngresarDatos extends Component {
             }
         });
     }
-
-
 }
