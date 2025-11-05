@@ -104,91 +104,109 @@ public class IngresarDatosTxt extends Component {
 
         guardarEnXmlButton.addActionListener(e->{
             String ruta = System.getProperty("user.dir");
-            String archivoXML=crearXML();
-            String archivoTXT = ruta+"\\src\\formulario\\txt.txt";
-
+            String archivoXML = crearXML();
+            String archivoTXT = ruta + "\\src\\formulario\\txt.txt";
 
             try {
-                //reviso si existe el txt
+                // Reviso si existe el txt
                 File fileTXT = new File(archivoTXT);
                 if (!fileTXT.exists()) {
                     System.out.println("El archivo " + archivoTXT + " no existe.");
                     return;
                 }
-                //uso el bufferreader para leer el txt
-                BufferedReader reader = new BufferedReader(new FileReader(fileTXT));
-                String linea;
-                String nombre = "", apellidos = "", telefono = "", dni = "", direccion = "";//creo mis variables para los datos del txt
-                //leo las lineas una a una y guardo la informacion
-                while ((linea = reader.readLine()) != null) {
-                    if (linea.startsWith("Nombre:")) {
-                        nombre = linea.substring(7).trim();
-                    } else if (linea.startsWith("Apellidos:")) {
-                        apellidos = linea.substring(10).trim();
-                    }else if (linea.startsWith("Telefono:")) {
-                        telefono = linea.substring(9).trim();
-                    }else if (linea.startsWith("Dni:")) {
-                        dni = linea.substring(4).trim();
-                    }else if (linea.startsWith("Direccion:")) {
-                        direccion = linea.substring(10).trim();
-                    }
-                }
 
-                //escribo el xml
+                // Preparo el documento XML
                 DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                 DocumentBuilder builder = factory.newDocumentBuilder();
                 Document doc = builder.newDocument();
 
                 Element root = doc.createElement("usuarios");
                 doc.appendChild(root);
-                // 4. Crear un elemento hijo
-                Element usuario = doc.createElement("usuario");
 
-                Element nombrexml = doc.createElement("nombre");
-                //asigo el nombre del txt al xml
-                nombrexml.appendChild(doc.createTextNode(nombre));
+                // Uso BufferedReader para leer el txt
+                BufferedReader reader = new BufferedReader(new FileReader(fileTXT));
+                String linea;
+                String nombre = "", apellidos = "", telefono = "", dni = "", direccion = "";
 
-                Element apellidoxml = doc.createElement("apellido");
-                //asigno el apellido del txt al xml
-                apellidoxml.appendChild(doc.createTextNode(apellidos));
+                // Leo línea por línea
+                while ((linea = reader.readLine()) != null) {
+                    if (linea.startsWith("Nombre:")) {
+                        nombre = linea.substring(7).trim();
+                    } else if (linea.startsWith("Apellidos:")) {
+                        apellidos = linea.substring(10).trim();
+                    } else if (linea.startsWith("Telefono:")) {
+                        telefono = linea.substring(9).trim();
+                    } else if (linea.startsWith("Dni:")) {
+                        dni = linea.substring(4).trim();
+                    } else if (linea.startsWith("Direccion:")) {
+                        direccion = linea.substring(10).trim();
 
-                Element telefonoxml = doc.createElement("telefono");
-                //asigno el telefono del txt al xml
-                telefonoxml.appendChild(doc.createTextNode(telefono));
+                        // AQUÍ ESTÁ EL CAMBIO: Cuando leo la dirección (último dato),
+                        // creo el elemento usuario con todos los datos
+                        Element usuario = doc.createElement("usuario");
 
-                Element dnixml = doc.createElement("dni");
-                //asigno el dni del txt al xml
-                dnixml.appendChild(doc.createTextNode(dni));
+                        Element nombrexml = doc.createElement("nombre");
+                        nombrexml.appendChild(doc.createTextNode(nombre));
 
-                Element direccionxml = doc.createElement("direccion");
-                //asigno el direccion del txt al xml
-                direccionxml.appendChild(doc.createTextNode(direccion));
+                        Element apellidoxml = doc.createElement("apellido");
+                        apellidoxml.appendChild(doc.createTextNode(apellidos));
 
-                //le asigno sus variables a el usuario
-                usuario.appendChild(nombrexml);
-                usuario.appendChild(apellidoxml);
-                usuario.appendChild(telefonoxml);
-                usuario.appendChild(dnixml);
-                usuario.appendChild(direccionxml);
+                        Element telefonoxml = doc.createElement("telefono");
+                        telefonoxml.appendChild(doc.createTextNode(telefono));
 
-                //asigno usuario a usuarios
-                root.appendChild(usuario);
-                //  Configurar el Transformer para escribir el XML en un archivo
+                        Element dnixml = doc.createElement("dni");
+                        dnixml.appendChild(doc.createTextNode(dni));
+
+                        Element direccionxml = doc.createElement("direccion");
+                        direccionxml.appendChild(doc.createTextNode(direccion));
+
+                        // Agrego todos los elementos al usuario
+                        usuario.appendChild(nombrexml);
+                        usuario.appendChild(apellidoxml);
+                        usuario.appendChild(telefonoxml);
+                        usuario.appendChild(dnixml);
+                        usuario.appendChild(direccionxml);
+
+                        // Agrego el usuario completo al root
+                        root.appendChild(usuario);
+
+                        // Limpio las variables para el siguiente usuario
+                        nombre = "";
+                        apellidos = "";
+                        telefono = "";
+                        dni = "";
+                        direccion = "";
+                    }
+                }
+
+                reader.close();
+
+                // Configurar el Transformer para escribir el XML
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes"); // Para que tenga sangría
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
 
                 DOMSource source = new DOMSource(doc);
                 StreamResult result = new StreamResult(new File(archivoXML));
 
-                // 8. Escribir el XML al archivo
+                // Escribir el XML al archivo
                 transformer.transform(source, result);
-                //archivo xml escrito
+
+                JOptionPane.showMessageDialog(this,
+                        "XML guardado correctamente en " + archivoXML,
+                        "Éxito",
+                        JOptionPane.INFORMATION_MESSAGE);
+
                 System.out.println("Archivo guardado correctamente");
 
-
-
-            }catch (Exception f){}
+            } catch (Exception f) {
+                JOptionPane.showMessageDialog(this,
+                        "Error al guardar XML:\n" + f.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                f.printStackTrace();
+            }
         });
     }
     public String crearXML(){
