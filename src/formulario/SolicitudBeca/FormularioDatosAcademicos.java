@@ -9,6 +9,8 @@ public class FormularioDatosAcademicos extends Component {
     private JTextField AÑOTextField;
     private JButton siguienteButton;
     public JPanel contenedor;
+    private JButton atrasButton;
+
     public FormularioDatosAcademicos() {
 
         // Cargar datos si existen
@@ -32,6 +34,18 @@ public class FormularioDatosAcademicos extends Component {
 
                 }
         );
+        atrasButton.addActionListener(E-> {
+            // Abrir Anterior formulario
+            JFrame frame = new JFrame("Datos personales");
+            FormularioDatosPersonales form2 = new FormularioDatosPersonales();
+            frame.setContentPane(form2.contenedor);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Cerrar frame actual
+            SwingUtilities.getWindowAncestor(contenedor).dispose();
+        });
 
     }
     public static void main(String[] args) {

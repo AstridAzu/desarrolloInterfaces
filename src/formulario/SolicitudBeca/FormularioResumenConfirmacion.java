@@ -24,6 +24,7 @@ public class FormularioResumenConfirmacion extends Component {
     private JTextField RENTATOTALUFTextField;
     private JTextField NUMEROCOMPONENTESUTextField;
     public JPanel contenedor;
+    private JButton atrasButton;
 
     public FormularioResumenConfirmacion() {
 
@@ -52,6 +53,19 @@ public class FormularioResumenConfirmacion extends Component {
                     JOptionPane.ERROR_MESSAGE);
             }
         });
+        atrasButton.addActionListener(E-> {
+            // Abrir Anterior formulario
+            JFrame frame = new JFrame("Datos Académicos");
+            FormularioDatosFinancieros form2 = new FormularioDatosFinancieros();
+            frame.setContentPane(form2.contenedor);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Cerrar frame actual
+            SwingUtilities.getWindowAncestor(contenedor).dispose();
+        });
+
 
     }
 

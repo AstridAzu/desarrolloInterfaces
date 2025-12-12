@@ -12,6 +12,7 @@ public class FormularioDatosFinancieros extends Component {
     private JTextField RENTATOTALUNIDADFAMILIARTextField;
     private JTextField NUMEROCOMPONENTESUNIDADTextField;
     public JPanel contenedor;
+    private JButton atrasButton;
 
     public FormularioDatosFinancieros() {
 
@@ -39,6 +40,19 @@ public class FormularioDatosFinancieros extends Component {
 
                 }
         );
+        atrasButton.addActionListener(E-> {
+            // Abrir Anterior formulario
+            JFrame frame = new JFrame("Datos Académicos");
+            FormularioDatosAcademicos form2 = new FormularioDatosAcademicos();
+            frame.setContentPane(form2.contenedor);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Cerrar frame actual
+            SwingUtilities.getWindowAncestor(contenedor).dispose();
+        });
+
 
     }
 
