@@ -15,7 +15,7 @@ import java.awt.*;
 import java.io.*;
 
 public class IngresarDatosTxt extends Component {
-    private JPanel contenedor;
+    public JPanel contenedor;
     private JTextField nombreTextField;
     private JTextField apellidoTextField;
     private JTextField TelefonoTextField;
@@ -25,6 +25,7 @@ public class IngresarDatosTxt extends Component {
     private JButton grabarButton;
     private JButton guardarEnXmlButton;
     private JTextField direccionTextField;
+    private JTextField emailTextField;
 
     public IngresarDatosTxt() {
         //codigo para el boton enviar
@@ -34,6 +35,7 @@ public class IngresarDatosTxt extends Component {
             String telefono = TelefonoTextField.getText();
             String dni = DniTextField.getText();
             String direccion = direccionTextField.getText();
+            String email = emailTextField.getText();
             //variable para el mensaje de error
             String dato;
             //ifs para cada campo de texto
@@ -62,8 +64,14 @@ public class IngresarDatosTxt extends Component {
                 dato="falta ingresar el direccion";
                 mensajeTextArea.setText(dato);
                 return;
+
             }
-            if(!nombre.isEmpty() || !apellido.isEmpty() || !dni.isEmpty() || !telefono.isEmpty()|| !direccion.isEmpty() ) {
+            if(email.isEmpty() ) {
+                dato="falta ingresar el email";
+                mensajeTextArea.setText(dato);
+                return;
+            }
+            if(!nombre.isEmpty() || !apellido.isEmpty() || !dni.isEmpty() || !telefono.isEmpty()|| !direccion.isEmpty()|| !email.isEmpty() ) {
                 mensajeTextArea.setText("Datos introducidos correctamente");
             }
             //ruta proyecto
@@ -82,6 +90,7 @@ public class IngresarDatosTxt extends Component {
                 writer.write("Telefono: " + telefono + "\n");
                 writer.write("Dni: " + dni + "\n");
                 writer.write("Direccion: " + direccion + "\n");
+                writer.write("Email: " + email + "\n");
                 JOptionPane.showMessageDialog(this,
                         "Datos guardados correctamente en " + archivoTXT,
                         "Éxito",
@@ -126,9 +135,9 @@ public class IngresarDatosTxt extends Component {
                 // Uso BufferedReader para leer el txt
                 BufferedReader reader = new BufferedReader(new FileReader(fileTXT));
                 String linea;
-                String nombre = "", apellidos = "", telefono = "", dni = "", direccion = "";
-
+                String nombre = "", apellidos = "", telefono = "", dni = "", direccion = "", email = "";
                 // Leo línea por línea
+
                 while ((linea = reader.readLine()) != null) {
                     if (linea.startsWith("Nombre:")) {
                         nombre = linea.substring(7).trim();
@@ -140,6 +149,8 @@ public class IngresarDatosTxt extends Component {
                         dni = linea.substring(4).trim();
                     } else if (linea.startsWith("Direccion:")) {
                         direccion = linea.substring(10).trim();
+                    } else if (linea.startsWith("Email:")) {
+                        email = linea.substring(5).trim();
 
                         // AQUÍ ESTÁ EL CAMBIO: Cuando leo la dirección (último dato),
                         // creo el elemento usuario con todos los datos
@@ -160,12 +171,18 @@ public class IngresarDatosTxt extends Component {
                         Element direccionxml = doc.createElement("direccion");
                         direccionxml.appendChild(doc.createTextNode(direccion));
 
+                        Element emailxml = doc.createElement("email");
+                        emailxml.appendChild(doc.createTextNode(email));
+
+
+
                         // Agrego todos los elementos al usuario
                         usuario.appendChild(nombrexml);
                         usuario.appendChild(apellidoxml);
                         usuario.appendChild(telefonoxml);
                         usuario.appendChild(dnixml);
                         usuario.appendChild(direccionxml);
+                        usuario.appendChild(emailxml);
 
                         // Agrego el usuario completo al root
                         root.appendChild(usuario);
@@ -176,6 +193,7 @@ public class IngresarDatosTxt extends Component {
                         telefono = "";
                         dni = "";
                         direccion = "";
+                        email = "";
                     }
                 }
 
@@ -229,6 +247,7 @@ public class IngresarDatosTxt extends Component {
         DniTextField.setText("");
         mensajeTextArea.setText("");
         direccionTextField.setText("");
+        emailTextField.setText("");
     }
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
