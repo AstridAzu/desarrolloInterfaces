@@ -24,10 +24,30 @@ public class FormularioResumenConfirmacion extends Component {
     private JTextField RENTATOTALUFTextField;
     private JTextField NUMEROCOMPONENTESUTextField;
     public JPanel contenedor;
+    private JButton paso1Button;
+    private JButton paso2Button;
+    private JButton paso3Button;
+    private JButton paso4Button;
+    private JPanel header;
+    private JLabel title;
     private JButton atrasButton;
+    private JPanel contenedorPaso4;
 
     public FormularioResumenConfirmacion() {
 
+        title.setForeground(Color.white);
+        header.setBackground(new Color(220, 20, 60));
+        header.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        header.putClientProperty("FlatClientProperties.STYLE", "arc: 30");
+        contenedorPaso4.setBackground(new Color(128, 128, 128));
+        // 1. Quita el borde de línea exterior
+        paso4Button.setBorderPainted(false);
+        // 2. Quita el recuadro de puntos que aparece al hacer clic (enfoque)
+        paso4Button.setFocusPainted(false);
+        // 3. (Opcional) Quita el fondo por defecto si solo quieres ver el texto/icono
+        paso4Button.setContentAreaFilled(false);
+        // 4. Asegura que no haya márgenes internos residuales
+        paso4Button.setBorder(BorderFactory.createEmptyBorder());
         // Cargar datos si existen
         datos datos = formulario.SolicitudBeca.datos.getInstancia();
         NOMBRETextField.setText(datos.getNOMBRE());
@@ -54,8 +74,8 @@ public class FormularioResumenConfirmacion extends Component {
             }
         });
         atrasButton.addActionListener(E-> {
-            // Abrir Anterior formulario
-            JFrame frame = new JFrame("Datos Académicos");
+            // Abrir siguiente formulario
+            JFrame frame = new JFrame("Datos Financieros");
             FormularioDatosFinancieros form2 = new FormularioDatosFinancieros();
             frame.setContentPane(form2.contenedor);
             frame.pack();
@@ -64,7 +84,50 @@ public class FormularioResumenConfirmacion extends Component {
 
             // Cerrar frame actual
             SwingUtilities.getWindowAncestor(contenedor).dispose();
+
         });
+        paso1Button.addActionListener(E-> {
+            // Abrir siguiente formulario
+            JFrame frame = new JFrame("Formulario Datos personales");
+            FormularioDatosPersonales form2 = new FormularioDatosPersonales();
+            frame.setContentPane(form2.contenedor);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Cerrar frame actual
+            SwingUtilities.getWindowAncestor(contenedor).dispose();
+
+        });
+        paso2Button.addActionListener(E-> {
+            // Abrir siguiente formulario
+            JFrame frame = new JFrame("Datos Academicos");
+            FormularioDatosAcademicos form2 = new FormularioDatosAcademicos();
+            frame.setContentPane(form2.contenedor);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Cerrar frame actual
+            SwingUtilities.getWindowAncestor(contenedor).dispose();
+
+        });
+
+        paso3Button.addActionListener(E-> {
+            // Abrir siguiente formulario
+            JFrame frame = new JFrame("Datos Financieros");
+            FormularioDatosFinancieros form2 = new FormularioDatosFinancieros();
+            frame.setContentPane(form2.contenedor);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Cerrar frame actual
+            SwingUtilities.getWindowAncestor(contenedor).dispose();
+
+        });
+
+
 
 
     }
